@@ -4,9 +4,19 @@ const CheckStatus = () => {
   const [complaints, setComplaints] = useState([]);
 
   useEffect(() => {
-    // Fetch complaints from localStorage
+    const loggedInUser = JSON.parse(localStorage.getItem('currentUser'));
+
+    if (!loggedInUser) {
+      alert('Please log in to view your complaints.');
+      return;
+    }
+
     const storedComplaints = JSON.parse(localStorage.getItem('complaints')) || [];
-    setComplaints(storedComplaints);
+    const userComplaints = storedComplaints.filter(
+      (complaint) => complaint.email === loggedInUser.email
+    );
+
+    setComplaints(userComplaints);
   }, []);
 
   return (
@@ -15,7 +25,6 @@ const CheckStatus = () => {
         <h2 className="text-2xl font-semibold text-center mb-6">
           Complaint Status Table
         </h2>
-
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-md">
             <thead className="bg-gray-200">
@@ -46,7 +55,9 @@ const CheckStatus = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="8" className="py-2 px-4 text-center">No complaints registered yet.</td>
+                  <td colSpan="8" className="py-2 px-4 text-center">
+                    No complaints registered yet.
+                  </td>
                 </tr>
               )}
             </tbody>

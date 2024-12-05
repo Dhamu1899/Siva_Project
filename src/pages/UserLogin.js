@@ -9,26 +9,22 @@ function UserLogin({ onLogin }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // Retrieve all users from localStorage
+  
     const storedUsers = JSON.parse(localStorage.getItem('users')) || [];
-
-    // Find a user with matching email and password
     const user = storedUsers.find(
       (user) => user.email === email && user.password === password
     );
-
+  
     if (user) {
-      // Login success
-      onLogin({ ...user, role: 'user' }); // Pass user data with role
+      onLogin({ ...user, role: 'user' });
       alert('Login successful!');
-      localStorage.setItem('user', JSON.stringify(user)); // Save current logged-in user
-      navigate('/user'); // Redirect to user dashboard
+      localStorage.setItem('currentUser', JSON.stringify(user)); // Save logged-in user
+      navigate('/user');
     } else {
-      // Login failed
       setError('Invalid email or password.');
     }
   };
+  
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">

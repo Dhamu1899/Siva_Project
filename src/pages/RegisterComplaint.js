@@ -21,50 +21,10 @@ function RegisterComplaint() {
 
   const districtCities = {
     "Tamil Nadu": {
-      "Chennai": [
-        "Chennai City",
-        "Ambattur",
-        "Anna Nagar",
-        "Adyar",
-        "Madhavaram",
-        "Pallavaram",
-        "Tambaram",
-        "Perungudi",
-        "Perambur",
-        "Nungambakkam",
-        "Alandur",
-        "Velachery",
-        "Choolaimedu",
-        "Mount Road",
-      ],
-      "Coimbatore": [
-        "Coimbatore City",
-        "Gandhipuram",
-        "R S 2nd Street",
-        "Ganapathy",
-        "Peelamedu",
-        "Tidel Park",
-        "Saravanampatti",
-        "Podanur",
-        "Kalapatti",
-        "Mettupalayam",
-        "Pollachi",
-      ],
-      "Madurai": [
-        "Madurai City",
-        "Simmakkal",
-        "Thirupparankundram",
-        "Koodal Nagar",
-        "Tallakulam",
-        "Meenakshi Amman Temple",
-        "Palanganatham",
-        "Muthusamy Pillai",
-        "MGR Nagar",
-        "Nerkundram",
-        "Tirunagar",
-      ],
-      // Add more districts and cities as needed
-    }
+      "Chennai": ["Chennai City", "Ambattur", "Anna Nagar", "Adyar", "Madhavaram", "Pallavaram", "Tambaram", "Perungudi", "Perambur", "Nungambakkam", "Alandur", "Velachery", "Choolaimedu", "Mount Road"],
+      "Coimbatore": ["Coimbatore City", "Gandhipuram", "Ganapathy", "Peelamedu", "Tidel Park", "Saravanampatti", "Podanur", "Kalapatti", "Mettupalayam", "Pollachi"],
+      "Madurai": ["Madurai City", "Simmakkal", "Thirupparankundram", "Koodal Nagar", "Tallakulam", "Meenakshi Amman Temple", "Palanganatham", "Muthusamy Pillai", "MGR Nagar", "Nerkundram", "Tirunagar"],
+    },
   };
 
   useEffect(() => {
@@ -77,7 +37,7 @@ function RegisterComplaint() {
     setFormData((prevData) => ({
       ...prevData,
       district: selectedDistrict,
-      city: '', // Reset city when district changes
+      city: '',
     }));
     setCities(districtCities['Tamil Nadu'][selectedDistrict] || []);
   };
@@ -101,16 +61,22 @@ function RegisterComplaint() {
   const handleDepartmentClick = (department) => {
     setFormData((prevData) => ({
       ...prevData,
-      department: department,
+      department,
     }));
-    setIsPopupOpen(true); // Open the popup when a department is selected
+    setIsPopupOpen(true);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Validate required fields
-    const requiredFields = ['state', 'district', 'city', 'pincode', 'area', 'landmark', 'description', 'department'];
+    const loggedInUser = JSON.parse(localStorage.getItem('currentUser'));
+
+    if (!loggedInUser) {
+      alert('Please log in to register a complaint.');
+      return;
+    }
+
+    const requiredFields = ['state', 'district', 'city', 'pincode', 'area', 'landmark', 'description', 'department', 'mobileNumber'];
     for (let field of requiredFields) {
       if (!formData[field]) {
         setError(`Please fill the ${field} field.`);
@@ -118,30 +84,29 @@ function RegisterComplaint() {
       }
     }
 
-    // Check if both image and video are uploaded
+    if (!/^\d{10}$/.test(formData.mobileNumber)) {
+      setError('Please enter a valid 10-digit mobile number.');
+      return;
+    }
+
     if (!formData.image || !formData.video) {
       setError('Please upload both an image and a video.');
       return;
     }
 
-    // All validations passed
     try {
       const storedComplaints = JSON.parse(localStorage.getItem('complaints')) || [];
       const newComplaint = {
         ...formData,
         id: Date.now(),
+        email: loggedInUser.email,
         image: formData.image.name,
         video: formData.video.name,
+        status: 'Pending',
       };
       storedComplaints.push(newComplaint);
-
-      // Save updated complaints array to localStorage
       localStorage.setItem('complaints', JSON.stringify(storedComplaints));
-
-      // Show success message
       alert('Complaint successfully registered!');
-
-      // Reset error and form data
       setError('');
       setIsPopupOpen(false);
       setFormData({
@@ -154,10 +119,11 @@ function RegisterComplaint() {
         description: '',
         image: null,
         video: null,
-        department: '', // New field
+        department: '',
+        mobileNumber: '',
       });
     } catch (error) {
-      console.error('Error saving data to localStorage', error);
+      console.error('Error saving complaint:', error);
       setError('An error occurred while saving the complaint. Please try again.');
     }
   };
@@ -165,7 +131,6 @@ function RegisterComplaint() {
   const handleCancel = () => {
     setIsPopupOpen(false);
   };
-
   return (
     <div className="min-h-screen bg-gray-100">
       <main className="container mx-auto px-6 py-8">
