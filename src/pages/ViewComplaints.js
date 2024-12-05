@@ -1,61 +1,121 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 function ViewComplaints() {
   const [complaints, setComplaints] = useState([]);
+  const [selectedMedia, setSelectedMedia] = useState(null);
+  const [mediaType, setMediaType] = useState(""); // "image" or "video"
 
   useEffect(() => {
-    const storedComplaints = JSON.parse(localStorage.getItem('complaints') || '[]');
+    const storedComplaints = JSON.parse(localStorage.getItem('complaints')) || [];
     setComplaints(storedComplaints);
   }, []);
 
+  const handleViewMedia = (mediaUrl, type) => {
+    setSelectedMedia(mediaUrl);
+    setMediaType(type);
+  };
+
+  const handleCloseMedia = () => {
+    setSelectedMedia(null);
+    setMediaType("");
+  };
+
+  const handleDeleteComplaint = (id) => {
+    if (window.confirm("Are you sure you want to delete this complaint?")) {
+      const updatedComplaints = complaints.filter((complaint) => complaint.id !== id);
+      setComplaints(updatedComplaints);
+      localStorage.setItem('complaints', JSON.stringify(updatedComplaints));
+    }
+  };
+
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
-      <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800">View Complaints</h2>
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white border border-gray-300">
-          <thead className="bg-gray-200">
-            <tr>
-              <th className="py-2 px-4 border-b text-left">ID</th>
-              <th className="py-2 px-4 border-b text-left">Department</th>
-              <th className="py-2 px-4 border-b text-left">Subject</th>
-              <th className="py-2 px-4 border-b text-left">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {complaints.length > 0 ? (
-              complaints.map((complaint) => (
-                <tr
-                  key={complaint.id}
-                  className="border-b hover:bg-gray-100 transition duration-200"
-                >
-                  <td className="px-4 py-2">{complaint.id}</td>
-                  <td className="px-4 py-2">{complaint.department}</td>
-                  <td className="px-4 py-2">{complaint.subject}</td>
-                  <td className="px-4 py-2">
-                    <span
-                      className={`px-2 py-1 rounded ${
-                        complaint.status === 'Resolved'
-                          ? 'bg-green-200 text-green-800'
-                          : complaint.status === 'In Progress'
-                          ? 'bg-yellow-200 text-yellow-800'
-                          : 'bg-red-200 text-red-800'
-                      }`}
+    <div>
+      <h2>View Complaints</h2>
+
+      {/* Complaints Table */}
+      <table className="min-w-full table-auto border-collapse mt-6">
+        <thead>
+          <tr>
+            <th className="border p-2 text-left">ID</th>
+            <th className="border p-2 text-left">State</th>
+            <th className="border p-2 text-left">District</th>
+            <th className="border p-2 text-left">city</th>
+            <th className="border p-2 text-left">Pincode</th>
+            <th className="border p-2 text-left">Area</th>
+            <th className="border p-2 text-left">Landmark</th>
+            <th className="border p-2 text-left">Description</th>
+            <th className="border p-2 text-left">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {complaints.length > 0 ? (
+            complaints.map((complaint) => (
+              <tr key={complaint.id} className="odd:bg-gray-100 even:bg-white">
+                <td className="border p-2">{complaint.id}</td>
+                <td className="border p-2">{complaint.state}</td>
+                <td className="border p-2">{complaint.district}</td>
+                <td className="border p-2">{complaint.city}</td>
+                <td className="border p-2">{complaint.pincode}</td>
+                <td className="border p-2">{complaint.area}</td>
+                <td className="border p-2">{complaint.landmark}</td>
+                <td className="border p-2">{complaint.description}</td>
+                <td className="border p-2">
+                  {complaint.image && (
+                    <button
+                      onClick={() => handleViewMedia(complaint.image, "image")}
+                      className="text-blue-500 hover:underline mr-2"
                     >
-                      {complaint.status}
-                    </span>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="4" className="text-center py-4 text-gray-500">
-                  No complaints available.
+                      View Image
+                    </button>
+                  )}
+                  {complaint.video && (
+                    <button
+                      onClick={() => handleViewMedia(complaint.video, "video")}
+                      className="text-blue-500 hover:underline mr-2"
+                    >
+                      Play Video
+                    </button>
+                  )}
+                  <button
+                    onClick={() => handleDeleteComplaint(complaint.id)}
+                    className="text-red-500 hover:underline"
+                  >
+                    Delete
+                  </button>
                 </td>
               </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="8" className="border p-2 text-center">
+                No complaints found.
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+
+      {/* Media Modal */}
+      {selectedMedia && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-4 rounded-md relative">
+            <button
+              onClick={handleCloseMedia}
+              className="text-red-500 absolute top-2 right-2"
+            >
+              Close
+            </button>
+            {mediaType === "image" ? (
+              <img src={selectedMedia} alt="Complaint Media" className="max-w-full max-h-full" />
+            ) : (
+              <video controls className="max-w-full max-h-full">
+                <source src={selectedMedia} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
             )}
-          </tbody>
-        </table>
-      </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

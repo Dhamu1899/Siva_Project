@@ -37,9 +37,13 @@ export default function AddHodPage() {
                 className="border rounded w-full px-3 py-2"
               >
                 <option value="chief-minister-cell">Chief Minister Cell</option>
-                <option value="police">Police Department</option>
-                <option value="civil-supplies">Civil Supplies</option>
-                <option value="water-supply">Water Supply</option>
+                <option value="police">Tamil Nadu Pollution Control Board</option>
+                <option value="civil-supplies">Tamil Nadu Water Supply and Drainage Board</option>
+                <option value="water-supply">The Highway & Minor Ports Department</option>
+                <option value="water-supply">Municipal Corporation</option>
+                <option value="water-supply">Chennai Metropolitan Water supply and Sewage Board</option>
+                <option value="water-supply">The Commissionerate of Land Administration</option>
+                <option value="water-supply">Chennai Metropolitan Water supply and Sewage Board</option>
               </select>
             </div>
 
