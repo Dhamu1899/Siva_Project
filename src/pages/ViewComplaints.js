@@ -10,9 +10,18 @@ function ViewComplaints() {
     setComplaints(storedComplaints);
   }, []);
 
-  const handleViewMedia = (mediaUrl, type) => {
-    setSelectedMedia(mediaUrl);
-    setMediaType(type);
+  const handleViewMedia = (mediaUrl) => {
+    // Check if media is an image or video based on the file extension
+    const extension = mediaUrl.split('.').pop().toLowerCase();
+    if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(extension)) {
+      setSelectedMedia(mediaUrl);
+      setMediaType("image");
+    } else if (['mp4', 'avi', 'mkv', 'webm', 'mov', 'flv'].includes(extension)) {
+      setSelectedMedia(mediaUrl);
+      setMediaType("video");
+    } else {
+      alert("Unsupported media type");
+    }
   };
 
   const handleCloseMedia = () => {
@@ -39,7 +48,7 @@ function ViewComplaints() {
             <th className="border p-2 text-left">ID</th>
             <th className="border p-2 text-left">State</th>
             <th className="border p-2 text-left">District</th>
-            <th className="border p-2 text-left">city</th>
+            <th className="border p-2 text-left">City</th>
             <th className="border p-2 text-left">Pincode</th>
             <th className="border p-2 text-left">Area</th>
             <th className="border p-2 text-left">Landmark</th>
@@ -62,7 +71,7 @@ function ViewComplaints() {
                 <td className="border p-2">
                   {complaint.image && (
                     <button
-                      onClick={() => handleViewMedia(complaint.image, "image")}
+                      onClick={() => handleViewMedia(complaint.image)}
                       className="text-blue-500 hover:underline mr-2"
                     >
                       View Image
@@ -70,7 +79,7 @@ function ViewComplaints() {
                   )}
                   {complaint.video && (
                     <button
-                      onClick={() => handleViewMedia(complaint.video, "video")}
+                      onClick={() => handleViewMedia(complaint.video)}
                       className="text-blue-500 hover:underline mr-2"
                     >
                       Play Video
@@ -106,10 +115,18 @@ function ViewComplaints() {
               Close
             </button>
             {mediaType === "image" ? (
-              <img src={selectedMedia} alt="Complaint Media" className="max-w-full max-h-full" />
+              <img
+                src={selectedMedia}
+                alt="Complaint Media"
+                className="max-w-full max-h-full object-contain"
+              />
             ) : (
               <video controls className="max-w-full max-h-full">
                 <source src={selectedMedia} type="video/mp4" />
+                <source src={selectedMedia} type="video/avi" />
+                <source src={selectedMedia} type="video/mkv" />
+                <source src={selectedMedia} type="video/webm" />
+                <source src={selectedMedia} type="video/ogg" />
                 Your browser does not support the video tag.
               </video>
             )}

@@ -10,21 +10,22 @@ function UserLogin({ onLogin }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Get stored user data from localStorage
-    const storedUser = localStorage.getItem('userProfile');
-    if (!storedUser) {
-      setError('No user found. Please register first.');
-      return;
-    }
+    // Retrieve all users from localStorage
+    const storedUsers = JSON.parse(localStorage.getItem('users')) || [];
 
-    const user = JSON.parse(storedUser);
+    // Find a user with matching email and password
+    const user = storedUsers.find(
+      (user) => user.email === email && user.password === password
+    );
 
-    // Check if email and password match stored data
-    if (email === user.email && password === user.password) {
-      onLogin({ ...user, role: 'user' }); // Add role for navigation
+    if (user) {
+      // Login success
+      onLogin({ ...user, role: 'user' }); // Pass user data with role
       alert('Login successful!');
+      localStorage.setItem('user', JSON.stringify(user)); // Save current logged-in user
       navigate('/user'); // Redirect to user dashboard
     } else {
+      // Login failed
       setError('Invalid email or password.');
     }
   };
@@ -48,6 +49,7 @@ function UserLogin({ onLogin }) {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
                 className="border rounded w-full px-3 py-2"
+                required
               />
             </div>
             <div>
@@ -61,6 +63,7 @@ function UserLogin({ onLogin }) {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
                 className="border rounded w-full px-3 py-2"
+                required
               />
             </div>
             <button

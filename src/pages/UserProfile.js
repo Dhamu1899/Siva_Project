@@ -1,25 +1,23 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function UserProfile() {
   const [profileData, setProfileData] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [updatedData, setUpdatedData] = useState({});
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const data = JSON.parse(localStorage.getItem('userProfile')) || {
-      name: '',
-      fatherName: '',
-      age: '',
-      gender: '',
-      maritalStatus: '',
-      qualification: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
-    };
-    setProfileData(data);
-    setUpdatedData(data);
-  }, []);
+    // Retrieve the logged-in user's data from localStorage
+    const loggedInUser = JSON.parse(localStorage.getItem('user'));
+    if (loggedInUser) {
+      setProfileData(loggedInUser);
+      setUpdatedData(loggedInUser);
+    } else {
+      alert('No user is logged in. Redirecting to login page.');
+      navigate('/login');
+    }
+  }, [navigate]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -35,7 +33,8 @@ function UserProfile() {
       return;
     }
 
-    localStorage.setItem('userProfile', JSON.stringify(updatedData));
+    // Update the user's data in localStorage
+    localStorage.setItem('user', JSON.stringify(updatedData));
     setProfileData(updatedData);
     setIsEditing(false);
     alert('Profile updated successfully!');
@@ -114,38 +113,16 @@ function UserProfile() {
                           name={key}
                           value={value}
                           onChange={handleInputChange}
-                          className="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                          className="block w-full px-4 py-2 border border-gray-300 rounded-md"
                           required
                         />
-                      ) : key === 'gender' || key === 'maritalStatus' ? (
-                        <select
-                          name={key}
-                          value={value}
-                          onChange={handleInputChange}
-                          className="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                        >
-                          {key === 'gender' ? (
-                            <>
-                              <option value="Male">Male</option>
-                              <option value="Female">Female</option>
-                              <option value="Other">Other</option>
-                            </>
-                          ) : (
-                            <>
-                              <option value="Single">Single</option>
-                              <option value="Married">Married</option>
-                              <option value="Divorced">Divorced</option>
-                              <option value="Widowed">Widowed</option>
-                            </>
-                          )}
-                        </select>
                       ) : (
                         <input
                           type={key === 'email' ? 'email' : key === 'age' ? 'number' : 'text'}
                           name={key}
                           value={value}
                           onChange={handleInputChange}
-                          className="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                          className="block w-full px-4 py-2 border border-gray-300 rounded-md"
                           required
                         />
                       )}
