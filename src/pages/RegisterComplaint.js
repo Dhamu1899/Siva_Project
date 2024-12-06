@@ -21,10 +21,238 @@ function RegisterComplaint() {
 
   const districtCities = {
     "Tamil Nadu": {
-      "Chennai": ["Chennai City", "Ambattur", "Anna Nagar", "Adyar", "Madhavaram", "Pallavaram", "Tambaram", "Perungudi", "Perambur", "Nungambakkam", "Alandur", "Velachery", "Choolaimedu", "Mount Road"],
-      "Coimbatore": ["Coimbatore City", "Gandhipuram", "Ganapathy", "Peelamedu", "Tidel Park", "Saravanampatti", "Podanur", "Kalapatti", "Mettupalayam", "Pollachi"],
-      "Madurai": ["Madurai City", "Simmakkal", "Thirupparankundram", "Koodal Nagar", "Tallakulam", "Meenakshi Amman Temple", "Palanganatham", "Muthusamy Pillai", "MGR Nagar", "Nerkundram", "Tirunagar"],
-    },
+    "Chennai": [
+      "Chennai City",
+      "Ambattur",
+      "Anna Nagar",
+      "Adyar",
+      "Madhavaram",
+      "Pallavaram",
+      "Tambaram",
+      "Perungudi",
+      "Perambur",
+      "Nungambakkam"
+    ],
+    "Coimbatore": [
+      "Coimbatore City",
+      "Gandhipuram",
+      "RS Puram",
+      "Ganapathy",
+      "Peelamedu",
+      "Tidel Park",
+      "Saravanampatti",
+      "Podanur"
+    ],
+    "Madurai": [
+      "Madurai City",
+      "Thirumangalam",
+      "Anna Nagar",
+      "Koodal Nagar",
+      "Mattuthavani",
+      "Vadipatti",
+      "Usilampatti"
+    ],
+    "Tiruchirappalli": [
+      "Tiruchirappalli City",
+      "Srirangam",
+      "Thiruverumbur",
+      "Lalgudi",
+      "Manachanallur",
+      "Musiri",
+      "Thuraiyur"
+    ],
+    "Salem": [
+      "Salem City",
+      "Mettur",
+      "Attur",
+      "Omalur",
+      "Edappadi",
+      "Nangavalli",
+      "Gangavalli"
+    ],
+    "Erode": [
+      "Erode City",
+      "Bhavani",
+      "Perundurai",
+      "Gobichettipalayam",
+      "Sathyamangalam",
+      "Chithode",
+      "Modakurichi"
+    ],
+    "Tirunelveli": [
+      "Tirunelveli City",
+      "Palayamkottai",
+      "Nanguneri",
+      "Ambasamudram",
+      "Tenkasi",
+      "Cheranmahadevi",
+      "Vikramasingapuram"
+    ],
+    "Thanjavur": [
+      "Thanjavur City",
+      "Kumbakonam",
+      "Papanasam",
+      "Orathanadu",
+      "Pattukkottai",
+      "Peravurani",
+      "Thiruvaiyaru"
+    ],
+    "Vellore": [
+      "Vellore City",
+      "Gudiyatham",
+      "Ambur",
+      "Arakkonam",
+      "Katpadi",
+      "Walajapet",
+      "Arcot"
+    ],
+    "Tiruppur": [
+      "Tiruppur City",
+      "Avinashi",
+      "Dharapuram",
+      "Udumalpet",
+      "Palladam",
+      "Kangayam"
+    ],
+    "Thoothukudi": [
+      "Thoothukudi City",
+      "Kovilpatti",
+      "Ettayapuram",
+      "Sathankulam",
+      "Tiruchendur",
+      "Ottapidaram"
+    ],
+    "Virudhunagar": [
+      "Virudhunagar",
+      "Sivakasi",
+      "Rajapalayam",
+      "Aruppukkottai",
+      "Sattur",
+      "Srivilliputhur"
+    ],
+    "Cuddalore": [
+      "Cuddalore City",
+      "Chidambaram",
+      "Panruti",
+      "Virudhachalam",
+      "Neyveli",
+      "Bhuvanagiri"
+    ],
+    "Kanyakumari": [
+      "Nagercoil",
+      "Kanyakumari",
+      "Marthandam",
+      "Thuckalay",
+      "Colachel",
+      "Padmanabhapuram"
+    ],
+    "Kanchipuram": [
+      "Kanchipuram",
+      "Sriperumbudur",
+      "Walajabad",
+      "Chengalpattu",
+      "Thiruporur",
+      "Maraimalai Nagar"
+    ],
+    "Dharmapuri": [
+      "Dharmapuri",
+      "Palacode",
+      "Pennagaram",
+      "Hosur",
+      "Thoppur",
+      "Pappireddipatti"
+    ],
+    "Dindigul": [
+      "Dindigul",
+      "Palani",
+      "Kodaikanal",
+      "Oddanchatram",
+      "Batlagundu",
+      "Natham"
+    ],
+    "Krishnagiri": [
+      "Krishnagiri",
+      "Hosur",
+      "Kaveripattinam",
+      "Bargur",
+      "Uthangarai"
+    ],
+    "Nagapattinam": [
+      "Nagapattinam",
+      "Velankanni",
+      "Thirunallar",
+      "Karaikal",
+      "Sirkazhi",
+      "Mayiladuthurai"
+    ],
+    "Ramanathapuram": [
+      "Ramanathapuram",
+      "Rameswaram",
+      "Paramakudi",
+      "Kamuthi",
+      "Thiruvadanai"
+    ],
+    "Karur": [
+      "Karur",
+      "Kulithalai",
+      "Pugalur",
+      "Aravakurichi",
+      "Vellianai"
+    ],
+    "Sivaganga": [
+      "Sivaganga",
+      "Karaikudi",
+      "Devakottai",
+      "Manamadurai",
+      "Tirupathur"
+    ],
+    "Namakkal": [
+      "Namakkal",
+      "Tiruchengode",
+      "Rasipuram",
+      "Paramathi Velur",
+      "Puduchatram"
+    ],
+    "The Nilgiris": [
+      "Ooty",
+      "Coonoor",
+      "Kotagiri",
+      "Gudalur",
+      "Wellington"
+    ],
+    "Theni": [
+      "Theni",
+      "Bodinayakanur",
+      "Andipatti",
+      "Periyakulam",
+      "Cumbum"
+    ],
+    "Villupuram": [
+      "Villupuram",
+      "Tindivanam",
+      "Gingee",
+      "Kallakurichi",
+      "Ulundurpettai"
+    ],
+    "Perambalur": [
+      "Perambalur",
+      "Ariyalur",
+      "Kunnam",
+      "Veppanthattai"
+    ],
+    "Pudukkottai": [
+      "Pudukkottai",
+      "Aranthangi",
+      "Keeranur",
+      "Illuppur"
+    ],
+    "Ariyalur": [
+      "Ariyalur",
+      "Jayankondam",
+      "Sendurai",
+      "Andimadam"
+    ]
+  }
   };
 
   useEffect(() => {
