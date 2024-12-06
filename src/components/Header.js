@@ -27,7 +27,7 @@ function Header({ user, onLogout }) {
           onClick={handleLogout} 
           className="flex bg-red-500 text-white py-auto px-2 rounded hover:bg-red-600"
         >
-          LOG ME OUT
+          LOGOUT
         </button>
       )}
     </header>

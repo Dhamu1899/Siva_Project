@@ -18,6 +18,8 @@ import CheckStatus from './pages/CheckStatus';
 import SendFeedback from './pages/SendFeedback';
 import UserProfile from './pages/UserProfile';
 import DepartmentDashboard from './pages/DepartmentDashboard';
+import DepartmentViewComplaints from './pages/DepartmentViewComplaints';
+import DepartmentViewFeedback from './pages/DepartmentViewFeedback';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -99,11 +101,11 @@ function App() {
             />
             <Route
               path="/department/view-complaints"
-              element={user && user.role === 'department' ? <ViewComplaints /> : <Navigate to="/department-login" />}
+              element={user && user.role === 'department' ? <DepartmentViewComplaints /> : <Navigate to="/department-login" />}
             />
             <Route
               path="/department/view-feedback"
-              element={user && user.role === 'department' ? <ViewFeedback /> : <Navigate to="/department-login" />}
+              element={user && user.role === 'department' ? <DepartmentViewFeedback /> : <Navigate to="/department-login" />}
             />
             <Route
               path="/department/profile"

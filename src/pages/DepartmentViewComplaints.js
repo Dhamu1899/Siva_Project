@@ -1,21 +1,38 @@
 import React, { useEffect, useState } from "react";
 
-function ViewComplaints() {
+function DepartmentViewComplaints() {
   const [complaints, setComplaints] = useState([]);
+  const [filters, setFilters] = useState({});
   const [selectedMedia, setSelectedMedia] = useState(null);
   const [mediaType, setMediaType] = useState(""); // "image" or "video"
 
   useEffect(() => {
+    const loginDetails = JSON.parse(localStorage.getItem("loginDetails"));
+    if (!loginDetails) {
+      alert("No login details found. Redirecting to login.");
+      window.location.href = "/department-login";
+      return;
+    }
+
+    setFilters(loginDetails);
+
     const storedComplaints = JSON.parse(localStorage.getItem("complaints")) || [];
-    setComplaints(storedComplaints);
+    const filteredComplaints = storedComplaints.filter(
+      (complaint) =>
+        complaint.department === loginDetails.department &&
+        complaint.state === loginDetails.state &&
+        complaint.district === loginDetails.district &&
+        complaint.city === loginDetails.city
+    );
+    setComplaints(filteredComplaints);
   }, []);
 
   const handleViewMedia = (mediaUrl) => {
-    const extension = mediaUrl.split(".").pop().toLowerCase();
-    if (["jpg", "jpeg", "png", "gif", "bmp", "webp"].includes(extension)) {
+    const extension = mediaUrl.split('.').pop().toLowerCase();
+    if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(extension)) {
       setSelectedMedia(mediaUrl);
       setMediaType("image");
-    } else if (["mp4", "avi", "mkv", "webm", "mov", "flv"].includes(extension)) {
+    } else if (['mp4', 'avi', 'mkv', 'webm', 'mov', 'flv'].includes(extension)) {
       setSelectedMedia(mediaUrl);
       setMediaType("video");
     } else {
@@ -52,44 +69,44 @@ function ViewComplaints() {
   };
 
   return (
-    <div className="p-4">
-      <h2 className="text-lg font-semibold mb-4">View Complaints</h2>
-
-      {/* Complaints Table */}
-      <table className="min-w-full table-auto border-collapse text-sm">
+    <div className="container mx-auto mt-8">
+      <h2 className="text-2xl font-semibold mb-4">
+        Complaints - {filters.department} Department
+      </h2>
+      <table className="w-full border-collapse border border-gray-300">
         <thead>
           <tr>
-            <th className="border p-1 text-left">ID</th>
-            <th className="border p-1 text-left">State</th>
-            <th className="border p-1 text-left">District</th>
-            <th className="border p-1 text-left">City</th>
-            <th className="border p-1 text-left">Pincode</th>
-            <th className="border p-1 text-left">Area</th>
-            <th className="border p-1 text-left">Landmark</th>
-            <th className="border p-1 text-left">Mobile Number</th>
-            <th className="border p-1 text-left">Description</th>
-            <th className="border p-1 text-left">Department</th>
-            <th className="border p-1 text-left">Status</th>
-            <th className="border p-1 text-left">View</th>
-            <th className="border p-1 text-left">Action</th>
+            <th className="border p-2 text-left">ID</th>
+            <th className="border p-2 text-left">State</th>
+            <th className="border p-2 text-left">District</th>
+            <th className="border p-2 text-left">City</th>
+            <th className="border p-2 text-left">Pincode</th>
+            <th className="border p-2 text-left">Area</th>
+            <th className="border p-2 text-left">Landmark</th>
+            <th className="border p-2 text-left">Mobile Number</th>
+            <th className="border p-2 text-left">Description</th>
+            <th className="border p-2 text-left">Department</th>
+            <th className="border p-2 text-left">Status</th>
+            <th className="border p-2 text-left">View</th>
+            <th className="border p-2 text-left">Action</th>
           </tr>
         </thead>
         <tbody>
           {complaints.length > 0 ? (
             complaints.map((complaint) => (
-              <tr key={complaint.id} className="odd:bg-gray-100 even:bg-white">
-                <td className="border p-1">{complaint.id}</td>
-                <td className="border p-1">{complaint.state}</td>
-                <td className="border p-1">{complaint.district}</td>
-                <td className="border p-1">{complaint.city}</td>
-                <td className="border p-1">{complaint.pincode}</td>
-                <td className="border p-1">{complaint.area}</td>
-                <td className="border p-1">{complaint.landmark}</td>
-                <td className="border p-1">{complaint.mobileNumber || "N/A"}</td>
-                <td className="border p-1">{complaint.description}</td>
-                <td className="border p-1">{complaint.department || "N/A"}</td>
-                <td className="border p-1">{complaint.status || "Pending"}</td>
-                <td className="border p-1">
+              <tr key={complaint.id}>
+                <td className="border p-2">{complaint.id}</td>
+                <td className="border p-2">{complaint.state}</td>
+                <td className="border p-2">{complaint.district}</td>
+                <td className="border p-2">{complaint.city}</td>
+                <td className="border p-2">{complaint.pincode}</td>
+                <td className="border p-2">{complaint.area}</td>
+                <td className="border p-2">{complaint.landmark}</td>
+                <td className="border p-2">{complaint.mobileNumber}</td>
+                <td className="border p-2">{complaint.description}</td>
+                <td className="border p-2">{complaint.department}</td>
+                <td className="border p-2">{complaint.status}</td>
+                <td className="border p-2">
                   {complaint.image && (
                     <button
                       onClick={() => handleViewMedia(complaint.image)}
@@ -101,16 +118,16 @@ function ViewComplaints() {
                   {complaint.video && (
                     <button
                       onClick={() => handleViewMedia(complaint.video)}
-                      className="text-blue-500 hover:underline mr-2"
+                      className="text-blue-500 hover:underline"
                     >
                       Play Video
                     </button>
                   )}
                 </td>
-                <td className="border p-1">
+                <td className="border p-2">
                   <button
                     onClick={() => handleStatusChange(complaint.id)}
-                    className="bg-yellow-500 text-white px-1 py-1 rounded hover:bg-yellow-600 mr-1"
+                    className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600 mr-2"
                   >
                     {complaint.status === "Pending"
                       ? "Start Process"
@@ -120,7 +137,7 @@ function ViewComplaints() {
                   </button>
                   <button
                     onClick={() => handleDeleteComplaint(complaint.id)}
-                    className="bg-red-500 text-white px-1 py-1 rounded hover:bg-red-600"
+                    className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
                   >
                     Delete
                   </button>
@@ -129,8 +146,8 @@ function ViewComplaints() {
             ))
           ) : (
             <tr>
-              <td colSpan="13" className="border p-1 text-center">
-                No complaints found.
+              <td colSpan="13" className="border p-2 text-center">
+                No complaints matching the selected filters.
               </td>
             </tr>
           )}
@@ -155,7 +172,7 @@ function ViewComplaints() {
               />
             ) : (
               <video controls className="max-w-full max-h-full">
-                <source src={selectedMedia} type={`video/${selectedMedia.split(".").pop()}`} />
+                <source src={selectedMedia} type={`video/${selectedMedia.split('.').pop()}`} />
                 Your browser does not support the video tag.
               </video>
             )}
@@ -166,4 +183,4 @@ function ViewComplaints() {
   );
 }
 
-export default ViewComplaints;
+export default DepartmentViewComplaints;

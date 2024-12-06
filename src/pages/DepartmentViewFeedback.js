@@ -1,27 +1,46 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
-function ViewFeedback() {
+function DepartmentViewFeedback() {
   const [feedback, setFeedback] = useState([]);
+  const [filters, setFilters] = useState({});
 
-  // Fetch feedback from localStorage when the component mounts
+  // Fetch and filter feedback when the component mounts
   useEffect(() => {
-    const storedFeedback = JSON.parse(localStorage.getItem('feedback') || '[]');
-    setFeedback(storedFeedback);
+    const loginDetails = JSON.parse(localStorage.getItem("loginDetails"));
+    if (!loginDetails) {
+      alert("No login details found. Redirecting to login.");
+      window.location.href = "/department-login";
+      return;
+    }
+
+    setFilters(loginDetails);
+
+    const storedFeedback = JSON.parse(localStorage.getItem("feedback") || "[]");
+    const filteredFeedback = storedFeedback.filter(
+      (item) =>
+        item.department === loginDetails.department &&
+        item.state === loginDetails.state &&
+        item.district === loginDetails.district &&
+        item.city === loginDetails.city
+    );
+    setFeedback(filteredFeedback);
   }, []);
 
   // Delete feedback by ID
   const handleDelete = (id) => {
-    if (window.confirm('Are you sure you want to delete this feedback?')) {
+    if (window.confirm("Are you sure you want to delete this feedback?")) {
       const updatedFeedback = feedback.filter((item) => item.id !== id);
       setFeedback(updatedFeedback);
-      localStorage.setItem('feedback', JSON.stringify(updatedFeedback));
+      localStorage.setItem("feedback", JSON.stringify(updatedFeedback));
     }
   };
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
       <main className="flex-grow container mx-auto px-6 py-8">
-        <h2 className="text-2xl font-semibold mb-6 text-center">View Feedback</h2>
+        <h2 className="text-2xl font-semibold mb-6 text-center">
+          Feedback - {filters.department} Department
+        </h2>
         <div className="overflow-x-auto bg-white p-6 rounded-lg shadow">
           <table className="min-w-full border border-gray-300">
             <thead>
@@ -78,4 +97,4 @@ function ViewFeedback() {
   );
 }
 
-export default ViewFeedback;
+export default DepartmentViewFeedback;

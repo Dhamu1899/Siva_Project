@@ -2,18 +2,24 @@ import React, { useState, useEffect } from 'react';
 
 const CheckStatus = () => {
   const [complaints, setComplaints] = useState([]);
+  const [loggedInUser, setLoggedInUser] = useState(null);
 
   useEffect(() => {
-    const loggedInUser = JSON.parse(localStorage.getItem('currentUser'));
+    // Get the current logged-in user from localStorage
+    const user = JSON.parse(localStorage.getItem('currentUser'));
 
-    if (!loggedInUser) {
+    if (!user) {
       alert('Please log in to view your complaints.');
       return;
     }
 
+    setLoggedInUser(user);
+
+    // Fetch complaints from localStorage
     const storedComplaints = JSON.parse(localStorage.getItem('complaints')) || [];
+    // Filter complaints for the logged-in user's email
     const userComplaints = storedComplaints.filter(
-      (complaint) => complaint.email === loggedInUser.email
+      (complaint) => complaint.email === user.email
     );
 
     setComplaints(userComplaints);
@@ -35,6 +41,7 @@ const CheckStatus = () => {
                 <th className="py-2 px-4 border-b text-left">City</th>
                 <th className="py-2 px-4 border-b text-left">Area</th>
                 <th className="py-2 px-4 border-b text-left">Landmark</th>
+                <th className="py-2 px-4 border-b text-left">Department</th>
                 <th className="py-2 px-4 border-b text-left">Description</th>
                 <th className="py-2 px-4 border-b text-left">Status</th>
               </tr>
@@ -49,13 +56,14 @@ const CheckStatus = () => {
                     <td className="py-2 px-4 border-b">{complaint.city}</td>
                     <td className="py-2 px-4 border-b">{complaint.area}</td>
                     <td className="py-2 px-4 border-b">{complaint.landmark}</td>
+                    <td className="py-2 px-4 border-b">{complaint.department}</td>
                     <td className="py-2 px-4 border-b">{complaint.description}</td>
                     <td className="py-2 px-4 border-b">{complaint.status}</td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="8" className="py-2 px-4 text-center">
+                  <td colSpan="9" className="py-2 px-4 text-center">
                     No complaints registered yet.
                   </td>
                 </tr>
